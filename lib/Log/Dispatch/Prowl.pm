@@ -19,7 +19,7 @@ sub new {
         {   apikey => { type => SCALAR },
             name   => { type => SCALAR }, });
 
-    my $self = bless {}, $class;
+    my $self = bless { apikey => $p{apikey} }, $class;
 
     $self->_basic_init(%p);
 
@@ -32,13 +32,13 @@ sub log_message {
     my $self = shift;
     my %p    = @_;
 
-    my $ws = WevService::Prowl->new(apikey => $self->{apikey});
+    my $ws = WebService::Prowl->new(apikey => $self->{apikey});
 
-    my $level = $self->_level_as_number($self->{level});
-    my $event = uc($self->_level_as_name($self->{level}));
+    my $level = $self->_level_as_number($p{level});
+    my $event = uc($self->_level_as_name($p{level}));
 
     $ws->add(
-        application => $self->{name},
+        application => $p{name},
         event       => $event,
         priority    => $map_level{$level},
         description => $p{message});
